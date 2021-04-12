@@ -4,7 +4,7 @@ package am.aca.courses.controllers;
 import am.aca.courses.entity.ApplicantEntity;
 import am.aca.courses.entity.Status;
 import am.aca.courses.services.ApplicantService;
-import am.aca.courses.services.Applicants;
+import am.aca.courses.services.ApplicantsPDF;
 import am.aca.courses.services.CourseService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,14 +30,14 @@ public class ApplicantController {
 
     private final ApplicantService applicantService;
     private final CourseService courseService;
-    private final Applicants applicants;
+    private final ApplicantsPDF applicantsPDF;
 
     private static final String ZIP_MIME_TYPE = "application/zip";
 
-    public ApplicantController(ApplicantService applicantService, CourseService courseService, Applicants applicants) {
+    public ApplicantController(ApplicantService applicantService, CourseService courseService, ApplicantsPDF applicantsPDF) {
         this.applicantService = applicantService;
         this.courseService = courseService;
-        this.applicants = applicants;
+        this.applicantsPDF = applicantsPDF;
     }
 
     @GetMapping("/applicants")
@@ -62,7 +62,7 @@ public class ApplicantController {
             Map<String, InputStream> pdfs = new HashMap<>();
             for (ApplicantEntity applicantEntity : applicantEntities) {
                 if(applicantEntity.getStatus() == Status.COMPLETED) {
-                    InputStream inputStream = this.applicants.createPDF(applicantEntity);
+                    InputStream inputStream = this.applicantsPDF.createPDF(applicantEntity);
                     pdfs.put(applicantEntity.getName() + ".pdf", inputStream);
                 }
             }
@@ -81,7 +81,8 @@ public class ApplicantController {
                         zippedOut.finish();
                         zippedOut.close();
                     });
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -121,7 +122,7 @@ public class ApplicantController {
 
     @PutMapping("/applicants/{id}")
     public ResponseEntity<ApplicantEntity> updateApplicants(@RequestBody ApplicantEntity applicantEntity,
-                                                      @PathVariable("id") Long id) {
+                                                            @PathVariable("id") Long id) {
         Optional<ApplicantEntity> applicant = applicantService.getApplicantById(id);
         if (!applicant.isPresent()) {
             return ResponseEntity.notFound().build();

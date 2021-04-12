@@ -1,8 +1,7 @@
 package am.aca.courses.services.pdf;
 
 import am.aca.courses.entity.ApplicantEntity;
-import am.aca.courses.services.ApplicantService;
-import am.aca.courses.services.Applicants;
+import am.aca.courses.services.ApplicantsPDF;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Implementation of {@link Applicants} interface.
+ * Implementation of {@link ApplicantsPDF} interface.
  *
  * @author Arthur
  * @version 1.0
  */
 @Service
-public class ApplicantsPDF implements Applicants {
+public class ApplicantsPDFImpl implements ApplicantsPDF {
 
     @Override
     public InputStream createPDF(ApplicantEntity applicant) throws DocumentException, IOException {

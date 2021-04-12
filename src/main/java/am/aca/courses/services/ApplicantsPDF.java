@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public interface Applicants {
+public interface ApplicantsPDF {
 
     InputStream createPDF(ApplicantEntity applicant) throws IOException;
 }
